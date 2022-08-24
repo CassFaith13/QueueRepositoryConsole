@@ -128,45 +128,51 @@ public class ProgramUI {
     private void ProcessNextClaim() {
         Console.Clear();
 
-        System.Console.WriteLine("Would you like to process this claim?\n"
-        + "1. Yes\n"
-        + "2. No\n");
-        string? processAnswer = Console.ReadLine();
-
-        switch (processAnswer)
-        {
-            case "1":
-            if (_insurance.GetAllClaims().Count > 0)
+        if (_insurance.GetAllClaims().Count > 0)
             {
                 Console.Clear();
+                
+                ClaimQueue claim = _insurance.NextClaim();
 
-                ClaimQueue processClaim = _insurance.ProcessNext();
+                System.Console.WriteLine($"Claim ID: {claim.ClaimID} | {claim.ClaimType}\n"
+                + "-----------------\n"
+                + $"Claim Amount: {claim.ClaimAmount}\n"
+                + $"Date Of Incident: {claim.DateOfIncident}\n"
+                + $"Date Of Claim: {claim.DateOfClaim}\n"
+                + $"Is claim within 30 days of incident? {claim.ValidStatus}\n"
+                + $"Description of incident: {claim.Description}\n");
+                System.Console.WriteLine();
+                
+                System.Console.WriteLine("Would you like to process this claim?\n"
+                + "1. Yes\n"
+                + "2. No\n");
+                string? processAnswer = Console.ReadLine();
 
-                System.Console.WriteLine($"Claim ID: {processClaim.ClaimID} | {processClaim.ClaimType}\n"
-            + "-----------------\n"
-            + $"Claim Amount: {processClaim.ClaimAmount}\n"
-            + $"Date Of Incident: {processClaim.DateOfIncident}\n"
-            + $"Date Of Claim: {processClaim.DateOfClaim}\n"
-            + $"Is claim within 30 days of incident? {processClaim.ValidStatus}\n"
-            + $"Description of incident: {processClaim.Description}\n");
-            System.Console.WriteLine();
-            System.Console.WriteLine("Claim successfully processed!");
+                switch (processAnswer)
+                {
+                    case "1":
+                        Console.Clear();
+
+                        ClaimQueue processClaim = _insurance.ProcessNext();
+
+                    System.Console.WriteLine("Claim successfully processed!");
+                            break;
+                        case "2":
+                        System.Console.WriteLine("Back to Main Menu");
+                            break;
+                        default:
+                        Console.Clear();
+                        System.Console.WriteLine("Could not process claim. Please try again!");
+                            break;
+                        }
             } else {
                 System.Console.WriteLine("There are no claims to process.");
             }
-                break;
-            case "2":
-                System.Console.WriteLine("Back to Main Menu");
-                break;
-            default:
-            Console.Clear();
-            System.Console.WriteLine("Could not process claim. Please try again!");
-                break;
-        }
     }
 
     private void DisplayClaim(ClaimQueue claim) {
         
+        System.Console.WriteLine();
         System.Console.WriteLine($"Claim ID: {claim.ClaimID} | {claim.ClaimType}\n"
         + "-----------------\n"
         + $"Claim Amount: {claim.ClaimAmount}\n"
